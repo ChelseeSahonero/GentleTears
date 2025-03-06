@@ -131,8 +131,8 @@
 
         const reader = new FileReader();
         reader.onload = function(event) {
-            const posts = JSON.parse(localStorage.getItem("posts")) || [];
-            const newPost = {
+            let posts = JSON.parse(localStorage.getItem("posts")) || [];
+            let newPost = {
                 id: Date.now(),
                 title,
                 content,
@@ -140,7 +140,7 @@
                 likes: 0,
                 username
             };
-            posts.unshift(newPost);
+            posts.push(newPost); // Add new post at the end
             localStorage.setItem("posts", JSON.stringify(posts));
             loadPosts();
         };
@@ -155,8 +155,8 @@
     function loadPosts() {
         const postsContainer = document.getElementById("posts");
         postsContainer.innerHTML = "";
-        const posts = JSON.parse(localStorage.getItem("posts")) || [];
-        const likedPosts = JSON.parse(localStorage.getItem("likedPosts")) || {}; 
+        let posts = JSON.parse(localStorage.getItem("posts")) || [];
+        let likedPosts = JSON.parse(localStorage.getItem("likedPosts")) || {};
 
         posts.forEach(post => {
             const postElement = document.createElement("div");
@@ -176,16 +176,18 @@
     }
 
     function likePost(postId) {
-        const posts = JSON.parse(localStorage.getItem("posts")) || [];
-        let likedPosts = JSON.parse(localStorage.getItem("likedPosts")) || {}; 
+        let posts = JSON.parse(localStorage.getItem("posts")) || [];
+        let likedPosts = JSON.parse(localStorage.getItem("likedPosts")) || {};
 
         if (!likedPosts[postId]) { 
-            const postIndex = posts.findIndex(post => post.id == postId);
+            let postIndex = posts.findIndex(post => post.id == postId);
             if (postIndex !== -1) {
                 posts[postIndex].likes += 1;
                 localStorage.setItem("posts", JSON.stringify(posts));
+
                 likedPosts[postId] = true;
-                localStorage.setItem("likedPosts", JSON.stringify(likedPosts)); 
+                localStorage.setItem("likedPosts", JSON.stringify(likedPosts));
+
                 loadPosts();
             }
         }
