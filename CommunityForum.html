@@ -71,6 +71,7 @@
 <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
     // TODO: Add SDKs for Firebase products that you want to use
     // https://firebase.google.com/docs/web/setup#available-libraries
   
@@ -91,13 +92,13 @@
 
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        assignUsername();
+    document.addEventListener("DOMContentLoaded", async function() {
+        await assignUsername();
         loadPosts();
     });
 
     const usernames = [
-       "HappyTiger", "BraveElephant", "GentlePanda", "CuriousDolphin", "KindRabbit", "JollyPenguin", "FriendlyOtter",  
+     "HappyTiger", "BraveElephant", "GentlePanda", "CuriousDolphin", "KindRabbit", "JollyPenguin", "FriendlyOtter",  
 "CheerfulFox", "MerryKoala", "PlayfulSquirrel", "LivelyLynx", "SmilingTurtle", "CleverBeaver", "CharmingDeer",  
 "WittyHedgehog", "BouncyKangaroo", "ZestyParrot", "SunnyGiraffe", "DandySeahorse", "SillyMeerkat",  
 "PeppyRaccoon", "SpiritedBadger", "JazzyCheetah", "PerkyChipmunk", "BreezySwan", "SnappyCrab", "MirthfulFerret",  
@@ -133,12 +134,26 @@
 "LustrousOropendola", "RadiantKiskadee", "DazzlingDrongo", "EbullientBufflehead", "ChirpyFody",  
 "EffervescentTinamou", "JovialPetrel", "SpiritedJaeger", "GallantSkua", "FrolickingDotterel",  
 "AdventurousFody", "ZippyRail", "MerryTinamou", "ResilientSandpiper", "SpritelyJacana", "SociableWattledStarling"  
+
     ];
-    function assignUsername() {
-        let storedUsername = localStorage.getItem("username");
-        if (!storedUsername) {
-            storedUsername = usernames[Math.floor(Math.random() * usernames.length)];
-            localStorage.setItem("username", storedUsername);
+
+    async function assignUsername() {
+        // Generate a unique identifier for the device (simple approach)
+        let deviceId = localStorage.getItem("deviceId");
+        if (!deviceId) {
+            deviceId = "device_" + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem("deviceId", deviceId);
+        }
+
+        const userRef = db.collection("users").doc(deviceId);
+        const doc = await userRef.get();
+
+        if (doc.exists) {
+            localStorage.setItem("username", doc.data().username);
+        } else {
+            const newUsername = usernames[Math.floor(Math.random() * usernames.length)];
+            await userRef.set({ username: newUsername });
+            localStorage.setItem("username", newUsername);
         }
     }
 
