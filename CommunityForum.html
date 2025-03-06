@@ -175,7 +175,9 @@
             username,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => {
-            loadPosts();
+            loadPosts(); // Reload posts after submission
+        }).catch(error => {
+            console.error("Error posting: ", error);
         });
     };
 
@@ -187,21 +189,21 @@
 }
 
 
+
 function loadPosts() {
     const postsContainer = document.getElementById("posts");
-    postsContainer.innerHTML = "";
+    postsContainer.innerHTML = ""; // Clear existing posts
 
     db.collection("posts").orderBy("timestamp", "desc").get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             const post = doc.data();
             const postId = doc.id;
+            const currentUsername = localStorage.getItem("username");
+            const isOwner = post.username === currentUsername;
+            const isLiked = localStorage.getItem(`liked_${postId}`) === "true";
 
             const postElement = document.createElement("div");
             postElement.classList.add("forum-post");
-
-            const isLiked = localStorage.getItem(`liked_${postId}`) === "true";
-            const isOwner = post.username === localStorage.getItem("username");
-
             postElement.innerHTML = `
                 <h3>${post.title}</h3>
                 <p>${post.content}</p>
@@ -210,10 +212,14 @@ function loadPosts() {
                 <button onclick="likePost('${postId}')" ${isLiked ? "disabled" : ""}>${post.likes} Likes</button>
                 ${isOwner ? `<button onclick="deletePost('${postId}')">Delete</button>` : ""}
             `;
+
             postsContainer.appendChild(postElement);
         });
+    }).catch(error => {
+        console.error("Error fetching posts: ", error);
     });
 }
+
 
 
 function likePost(postId) {
@@ -229,6 +235,7 @@ function likePost(postId) {
         }
     });
 }
+
 
 
 function deletePost(postId) {
