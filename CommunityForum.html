@@ -68,6 +68,28 @@
     </section>
 </div>
 
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBI60QVkBTelYOUup5hpmvDzfK4dtY4zww",
+      authDomain: "gentletears-d8eb0.firebaseapp.com",
+      projectId: "gentletears-d8eb0",
+      storageBucket: "gentletears-d8eb0.firebasestorage.app",
+      messagingSenderId: "319495846140",
+      appId: "1:319495846140:web:d1b4b0fc775f26eca83f79"
+    };
+  
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const app = initializeApp(firebaseConfig);
+  </script>
+
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         assignUsername();
@@ -121,89 +143,90 @@
     }
 
     function submitPost() {
-        const title = document.getElementById("post-title").value.trim();
-        const content = document.getElementById("post-content").value.trim();
-        const imageInput = document.getElementById("post-image");
-        const username = localStorage.getItem("username");
+    const title = document.getElementById("post-title").value.trim();
+    const content = document.getElementById("post-content").value.trim();
+    const imageInput = document.getElementById("post-image");
+    const username = localStorage.getItem("username");
 
-        if (!title || !content) return;
+    if (!title || !content) return;
 
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            const posts = JSON.parse(localStorage.getItem("posts")) || [];
-            const newPost = {
-                id: Date.now(),
-                title,
-                content,
-                image: imageInput.files.length ? event.target.result : "",
-                likes: 0,
-                username
-            };
-            posts.unshift(newPost);
-            localStorage.setItem("posts", JSON.stringify(posts));
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        db.collection("posts").add({
+            title,
+            content,
+            image: imageInput.files.length ? event.target.result : "",
+            likes: 0,
+            username,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
             loadPosts();
-        };
+        });
+    };
 
-        if (imageInput.files.length) {
-            reader.readAsDataURL(imageInput.files[0]);
-        } else {
-            reader.onload();
-        }
+    if (imageInput.files.length) {
+        reader.readAsDataURL(imageInput.files[0]);
+    } else {
+        reader.onload();
     }
+}
 
-    function loadPosts() {
-        const postsContainer = document.getElementById("posts");
-        postsContainer.innerHTML = "";
-        const posts = JSON.parse(localStorage.getItem("posts")) || [];
-        const likedPosts = JSON.parse(localStorage.getItem("likedPosts")) || {}; 
-        const currentUsername = localStorage.getItem("username");
 
-        posts.forEach(post => {
+function loadPosts() {
+    const postsContainer = document.getElementById("posts");
+    postsContainer.innerHTML = "";
+
+    db.collection("posts").orderBy("timestamp", "desc").get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            const post = doc.data();
+            const postId = doc.id;
+
             const postElement = document.createElement("div");
             postElement.classList.add("forum-post");
 
-            const isLiked = likedPosts[post.id] === true;
-            const isOwner = post.username === currentUsername;
+            const isLiked = localStorage.getItem(`liked_${postId}`) === "true";
+            const isOwner = post.username === localStorage.getItem("username");
 
             postElement.innerHTML = `
                 <h3>${post.title}</h3>
                 <p>${post.content}</p>
                 <p><strong>Posted by:</strong> ${post.username}</p>
                 ${post.image ? `<img src="${post.image}" class="forum-image" width="200" height="200">` : ''}
-                <button onclick="likePost('${post.id}')" ${isLiked ? "disabled" : ""}>${post.likes} Likes</button>
-                ${isOwner ? `<button onclick="deletePost('${post.id}')">Delete</button>` : ""}
+                <button onclick="likePost('${postId}')" ${isLiked ? "disabled" : ""}>${post.likes} Likes</button>
+                ${isOwner ? `<button onclick="deletePost('${postId}')">Delete</button>` : ""}
             `;
             postsContainer.appendChild(postElement);
         });
-    }
+    });
+}
 
-    function likePost(postId) {
-        const posts = JSON.parse(localStorage.getItem("posts")) || [];
-        let likedPosts = JSON.parse(localStorage.getItem("likedPosts")) || {}; 
 
-        if (!likedPosts[postId]) { 
-            const postIndex = posts.findIndex(post => post.id == postId);
-            if (postIndex !== -1) {
-                posts[postIndex].likes += 1;
-                localStorage.setItem("posts", JSON.stringify(posts));
-                likedPosts[postId] = true;
-                localStorage.setItem("likedPosts", JSON.stringify(likedPosts)); 
+function likePost(postId) {
+    const postRef = db.collection("posts").doc(postId);
+
+    postRef.get().then((doc) => {
+        if (doc.exists && !localStorage.getItem(`liked_${postId}`)) {
+            const currentLikes = doc.data().likes || 0;
+            postRef.update({ likes: currentLikes + 1 }).then(() => {
+                localStorage.setItem(`liked_${postId}`, "true");
                 loadPosts();
-            }
+            });
         }
-    }
+    });
+}
 
-    function deletePost(postId) {
-        let posts = JSON.parse(localStorage.getItem("posts")) || [];
-        const currentUsername = localStorage.getItem("username");
 
-        const postIndex = posts.findIndex(post => post.id == postId);
-        if (postIndex !== -1 && posts[postIndex].username === currentUsername) {
-            posts.splice(postIndex, 1);
-            localStorage.setItem("posts", JSON.stringify(posts));
-            loadPosts();
+function deletePost(postId) {
+    const postRef = db.collection("posts").doc(postId);
+
+    postRef.get().then((doc) => {
+        if (doc.exists && doc.data().username === localStorage.getItem("username")) {
+            postRef.delete().then(() => {
+                loadPosts();
+            });
         }
-    }
+    });
+}
 </script>
 
 
