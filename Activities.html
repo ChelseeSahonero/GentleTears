@@ -1,0 +1,262 @@
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title>Activities</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body>
+		<div id="page-wrapper">
+
+			<!-- Header -->
+				<div id="header-wrapper">
+					<div class="container">
+						<div class="row">
+							<div class="col-12">
+
+								<header id="header">
+									<h1><a href="index.html" id="logo">Gentle Tears</a></h1>
+									<nav id="nav">
+										<a href="index.html">Homepage</a>
+										<a href="Resources.html">Resources</a>
+										<a href="CommunityForum.html">Community Forum</a>
+										<a href="MoodTracker.html">Mood Tracker</a>
+										<a href="Activities.html" class="current-page-item">Activities</a>
+									</nav>
+								</header>
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+			<!-- Main -->
+				<div id="main">
+					<div class="container">
+						<div class="row main-row">
+							<div class="col-3 col-12-medium">
+									<section>
+										<h2>Today's Journal Prompt</h2>
+										<div id="journal-prompt" class="p-6 max-w-lg mx-auto bg-white rounded-xl shadow-md space-y-4 text-center"></div>
+									</section>
+
+									<section class="calm-zone">
+										<h2>Take a Deep Breath</h2>
+										<div class="breathing-circle"></div>
+								</section>
+
+							</div>
+							<div class="col-6 col-12-medium imp-medium">
+
+								<section class="middle-content">
+									<div class="section" id="bubblePop">
+										<h2>Bubble Pop</h2>
+										<div id="bubbleContainer"></div>
+									</div>
+								</section>
+
+							</div>
+							<div class="col-3 col-12-medium">
+
+								<section>
+									<div class="section" id="coloringBook">
+										<h2>Doodle Corner</h2>
+										<canvas id="canvas" width="200" height="300"></canvas>
+										<br>
+										<button class="button" onclick="clearCanvas()">Erase</button>
+									</div>
+								</section>
+
+								<section>
+									<div class="section" id="whiteNoise">
+										<h2>White Noise Generator</h2>
+										<button class="button" onclick="toggleWhiteNoise()">Play/Pause White Noise</button>
+									</div>
+								</section>
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+			<script>
+				const prompts = [
+				"What are three things you are grateful for today?",
+  "Describe a time you felt truly at peace. What contributed to that feeling?",
+  "What is one small thing you can do today to improve your mood?",
+  "Write about a challenge you overcame and what you learned from it.",
+  "What are your biggest sources of stress right now? How can you manage them?",
+  "Describe a person who has positively influenced your life and why.",
+  "What self-care activities make you feel the best? How can you do them more often?",
+  "What are three things you love about yourself?",
+  "How do you handle negative emotions? What are healthy ways to cope?",
+  "If you could give advice to your past self, what would it be?",
+  "Describe your ideal day. What can you do to make it a reality?",
+  "What is a fear you would like to overcome? How can you start working on it?",
+  "What accomplishments are you proud of?",
+  "What is something you're looking forward to?",
+  "How have you grown as a person in the last year?",
+  "What are three things that make you happy?",
+  "What boundaries do you need to set for your mental health?",
+  "How do you show yourself kindness?",
+  "What negative thoughts do you need to challenge?",
+  "Describe a moment when you felt deeply connected to someone.",
+  "What is something you want to forgive yourself for?",
+  "What inspires you to keep going on tough days?",
+  "How can you cultivate more mindfulness in your daily life?",
+  "Write about a time when you felt proud of yourself.",
+  "What is something you've always wanted to try? What’s stopping you?",
+  "What does self-love mean to you? How can you practice it more?",
+  "What do you need to let go of to find peace?",
+  "How do you recharge when you're feeling emotionally drained?",
+  "What kind of person do you want to become?",
+  "Write a letter to your future self.",
+  "What song, book, or movie has had a big impact on you and why?",
+  "What is your favorite way to relax?",
+  "What advice would you give to a friend struggling with mental health?",
+  "How do you practice gratitude in your life?",
+  "What is something that brings you a sense of purpose?",
+  "What does happiness look like for you?",
+  "Write about a time you helped someone. How did it make you feel?",
+  "What habits do you want to build to support your mental health?",
+  "How do you handle self-doubt?",
+  "What is something that always makes you smile?",
+  "Describe a place where you feel safe and calm.",
+  "What small moments in life bring you joy?",
+  "What is something you’ve learned from a past mistake?",
+  "How do you handle change? What helps you adapt?",
+  "Write about a time you felt truly confident in yourself.",
+  "How do you express your emotions in a healthy way?",
+  "What does success mean to you?",
+  "What do you need to hear today? Write it down as if you were comforting a friend."
+				];
+				
+				function getDailyPrompt() {
+					const storedPromptIndex = localStorage.getItem("promptIndex");
+					const lastUpdated = localStorage.getItem("lastUpdated");
+					const today = new Date().setHours(0, 0, 0, 0);
+				
+					if (storedPromptIndex && lastUpdated && parseInt(lastUpdated) === today) {
+						return prompts[parseInt(storedPromptIndex)];
+					} else {
+						const newIndex = Math.floor(Math.random() * prompts.length);
+						localStorage.setItem("promptIndex", newIndex);
+						localStorage.setItem("lastUpdated", today);
+						return prompts[newIndex];
+					}
+				}
+				
+				document.addEventListener("DOMContentLoaded", function() {
+					document.getElementById("journal-prompt").innerText = getDailyPrompt();
+				});
+			</script>
+			
+			<style>
+				        .breathing-circle {
+            width: 100px;
+            height: 100px;
+            background: #b3e5fc;
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: breathing 4s infinite alternate;
+        }
+        @keyframes breathing {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.5); }
+        }
+		.bubble {
+            width: 50px;
+            height: 50px;
+            background-color: lightblue;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 5px;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+        }
+        @keyframes pop {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+        canvas {
+            border: 1px solid black;
+        }
+			</style>
+   <script>
+	// Bubble Pop Simulator
+	function createBubbles() {
+		let container = document.getElementById('bubbleContainer');
+		container.innerHTML = '';
+		let bubbles = 20;
+		for (let i = 0; i < bubbles; i++) {
+			let bubble = document.createElement('div');
+			bubble.classList.add('bubble');
+			bubble.onclick = function() {
+				let popSound = new Audio('bubble-pop-2-293341.mp3');
+				popSound.play();
+				bubble.style.animation = 'pop 0.2s forwards';
+				setTimeout(() => {
+					bubble.remove();
+					bubbles--;
+					if (bubbles === 0) {
+						setTimeout(createBubbles, 500);
+					}
+				}, 200);
+			};
+			container.appendChild(bubble);
+		}
+	}
+	createBubbles();
+	
+	// Virtual Coloring Book
+	let canvas = document.getElementById("canvas");
+	let ctx = canvas.getContext("2d");
+	let painting = false;
+
+	canvas.addEventListener("mousedown", (event) => {
+		painting = true;
+		ctx.beginPath();
+		ctx.moveTo(event.offsetX, event.offsetY);
+	});
+	canvas.addEventListener("mouseup", () => painting = false);
+	canvas.addEventListener("mousemove", draw);
+
+	function draw(event) {
+		if (!painting) return;
+		ctx.lineWidth = 5;
+		ctx.lineCap = "round";
+		ctx.strokeStyle = "black";
+		ctx.lineTo(event.offsetX, event.offsetY);
+		ctx.stroke();
+		ctx.beginPath();
+		ctx.moveTo(event.offsetX, event.offsetY);
+	}
+	
+	function clearCanvas() {
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+	}
+
+	// White Noise Generator
+	let whiteNoise = new Audio("03-White-Noise-60min.mp3");
+	whiteNoise.loop = true;
+	function toggleWhiteNoise() {
+		if (whiteNoise.paused) {
+			whiteNoise.play();
+		} else {
+			whiteNoise.pause();
+			whiteNoise.currentTime = 0;
+		}
+	}
+</script>
+	</body>
+</html>

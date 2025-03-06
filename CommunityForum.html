@@ -1,0 +1,225 @@
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title>Community Forum</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body>
+		<div id="page-wrapper">
+
+			<!-- Header -->
+				<div id="header-wrapper">
+					<div class="container">
+						<div class="row">
+							<div class="col-12">
+
+								<header id="header">
+									<h1><a href="index.html" id="logo">Gentle Tears</a></h1>
+									<nav id="nav">
+										<a href="index.html">Homepage</a>
+										<a href="Resources.html">Resources</a>
+										<a href="CommunityForum.html">Community Forum</a>
+										<a href="MoodTracker.html">Mood Tracker</a>
+										<a href="Activities.html">Activities</a>
+									</nav>
+								</header>
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+			<!-- Main -->
+				<div id="main">
+					<div class="container">
+						<div class="row main-row">
+							<div class="col-4 col-12-medium">
+
+								<section>
+									<h2>Rules and Guide</h2>
+									<ol>
+										<ol>
+										<li>1. Be Respectful when posting in the coummunity forum</li>
+										<p></p>
+										<li>2. You can post your response to the daily journal prompt, vent, or how's your day been.</li>
+										<p></p>
+										<li>3. Posts are monitored on a daily basis, misconducted will be dealt it with</li>
+									</ol>
+								</section>
+
+							</div>
+							
+<div class="col-8 col-12-medium imp-medium">
+    <section>
+        <h2>Community Forum</h2>
+        <div id="forum-container">
+            <div class="forum-input">
+                <input type="text" id="post-title" placeholder="Post Title">
+                <textarea id="post-content" placeholder="Write something..."></textarea>
+                <input type="file" id="post-image" accept="image/*">
+                <button class="button" onclick="submitPost()">Post</button>
+            </div>
+			<hr>
+            <div id="posts"></div>
+        </div>
+    </section>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        assignUsername();
+        loadPosts();
+    });
+
+    const usernames = [
+       "HappyTiger", "BraveElephant", "GentlePanda", "CuriousDolphin", "KindRabbit", "JollyPenguin", "FriendlyOtter",  
+"CheerfulFox", "MerryKoala", "PlayfulSquirrel", "LivelyLynx", "SmilingTurtle", "CleverBeaver", "CharmingDeer",  
+"WittyHedgehog", "BouncyKangaroo", "ZestyParrot", "SunnyGiraffe", "DandySeahorse", "SillyMeerkat",  
+"PeppyRaccoon", "SpiritedBadger", "JazzyCheetah", "PerkyChipmunk", "BreezySwan", "SnappyCrab", "MirthfulFerret",  
+"GigglyOcelot", "PeppyPlatypus", "SassyJackal", "UpbeatSloth", "DaringFalcon", "FeistyMongoose", "ZanyArmadillo",  
+"FriskyWeasel", "PerseveringWolf", "TenaciousBison", "CunningCoyote", "VividMacaw", "FrolicsomeFawn", "MellowManatee",  
+"BriskMustang", "VibrantLemur", "DapperPeacock", "PluckyPorcupine", "BlissfulGoat", "JubilantDonkey", "LushOwl",  
+"BubblyMarmoset", "LustrousJaguar", "BouncyWallaby", "ResilientBaldEagle", "DaintyGoldfish", "ZippySalamander",  
+"EffervescentFlamingo", "SuaveStingray", "BrilliantFirefly", "EbullientDolphin", "JollyHummingbird", "PerkyPangolin",  
+"RadiantChameleon", "GleefulWombat", "DashingMole", "HeartyLobster", "HumbleDuck", "ChirpyBluejay", "PeppyWoodpecker",  
+"SwankyVulture", "RambunctiousFerret", "GallantGazelle", "CheekyHyena", "MerryMongoose", "ZestfulEel", "ExuberantFrog",  
+"SaucyScorpion", "PrancingMustang", "EnthusiasticMink", "VivaciousBobcat", "GraciousCygnet", "SprightlyHare",  
+"BlazingPhoenix", "SoaringAlbatross", "MirthfulQuokka", "HaleHawk", "AgileServal", "WinsomeRaven", "GregariousGibbon",  
+"EndearingSeal", "SportyOryx", "LivelyTamarin", "JazzyShrimp", "FerventLark", "DeterminedCaribou", "EnigmaticSphinx",  
+"NimbleChinchilla", "KeenTarsier", "BuoyantStarling", "JollyMagpie", "CheerfulTurkey", "SturdyMoose", "WarmheartedGorilla",  
+"GiddyOkapi", "PeppyButterfly", "JovialArmadillo", "FancifulIbex", "JauntyWren", "HarmoniousTarsier", "FlamboyantCobra",  
+"ChummyPorcupine", "DynamicHedgehog", "GleamingEgret", "EnlightenedCrane", "FancifulNarwhal", "SunkissedGecko",  
+"SpritelyBison", "VenerableTapir", "LustrousOrangutan", "GiddyQuail", "SuaveStork", "MajesticCondor", "PerseveringWalrus",  
+"DaringViper", "AnimatedPuffin", "RoguishCaracal", "BoisterousBeetle", "EnlivenedPika", "GlowingStarfish",  
+"FlourishingIbex", "DynamicOpossum", "SplendidEchidna", "DaintySwallow", "ChirpyRobin", "MerryPelican", "WaggishWeasel",  
+"ThrivingCormorant", "SociableTanager", "EnergeticGerbil", "EnchantingNightjar", "JauntyLoon", "DandyHornbill",  
+"GallantWolverine", "CharmingAnole", "HaleTurtle", "SprightlyCivet", "JubilantOriole", "DapperPuma", "PerkyHawk",  
+"ChirpingFlicker", "WaggishBinturong", "RavishingMacaw", "SpiritedKite", "LivelyThrasher", "GlowingPeccary",  
+"FestiveQuetzal", "KeenFlounder", "EbullientGrasshopper", "DapperOsprey", "GallivantingHoopoe", "JauntyMandrill",  
+"SportyIbex", "VivaciousBonobo", "FrolickingGazelle", "DashingKingfisher", "ResilientMuskrat", "PluckyAnemone",  
+"BashfulTamarin", "MajesticHartebeest", "DaringCuttlefish", "EffervescentCicada", "RousingSunbird", "AdventurousYabby",  
+"ThrivingNumbat", "SpunkyJerboa", "BuoyantAardvark", "ChipperChickadee", "BriskVole", "GlisteningTenrec",  
+"MagneticDrongo", "CharismaticCuscus", "GleefulKookaburra", "ExuberantPlover", "SwankyJacana", "FancifulRhebok",  
+"ThrivingXerus", "SportyBushbaby", "MirthfulCoati", "LivelyDotterel", "WittyKea", "BouncyPotoroo",  
+"ExultantQuokka", "GiddyZorilla", "DandyPangolin", "JubilantVervet", "FrolicsomeRedshank", "ZestyOcelot",  
+"RambunctiousManakin", "BlazingPewee", "DazzlingCassowary", "ElatedHornshark", "ThrivingSaki",  
+"SprightlySifaka", "GregariousBobolink", "LuminousTrogon", "EnchantingAnhinga", "DaringBooby",  
+"ResplendentSunbittern", "VibrantPotoo", "ChirpingSnipe", "JubilantBulbul", "DapperTarsier",  
+"LustrousOropendola", "RadiantKiskadee", "DazzlingDrongo", "EbullientBufflehead", "ChirpyFody",  
+"EffervescentTinamou", "JovialPetrel", "SpiritedJaeger", "GallantSkua", "FrolickingDotterel",  
+"AdventurousFody", "ZippyRail", "MerryTinamou", "ResilientSandpiper", "SpritelyJacana", "SociableWattledStarling"  
+    ];
+
+    function assignUsername() {
+        let storedUsername = localStorage.getItem("username");
+        if (!storedUsername) {
+            storedUsername = usernames[Math.floor(Math.random() * usernames.length)];
+            localStorage.setItem("username", storedUsername);
+        }
+    }
+
+    function submitPost() {
+        const title = document.getElementById("post-title").value.trim();
+        const content = document.getElementById("post-content").value.trim();
+        const imageInput = document.getElementById("post-image");
+        const username = localStorage.getItem("username");
+
+        if (!title || !content) return;
+
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const posts = JSON.parse(localStorage.getItem("posts")) || [];
+            const newPost = {
+                id: Date.now(),
+                title,
+                content,
+                image: imageInput.files.length ? event.target.result : "",
+                likes: 0,
+                username
+            };
+            posts.unshift(newPost);
+            localStorage.setItem("posts", JSON.stringify(posts));
+            loadPosts();
+        };
+
+        if (imageInput.files.length) {
+            reader.readAsDataURL(imageInput.files[0]);
+        } else {
+            reader.onload();
+        }
+    }
+
+    function loadPosts() {
+        const postsContainer = document.getElementById("posts");
+        postsContainer.innerHTML = "";
+        const posts = JSON.parse(localStorage.getItem("posts")) || [];
+        const likedPosts = JSON.parse(localStorage.getItem("likedPosts")) || {}; 
+
+        posts.forEach(post => {
+            const postElement = document.createElement("div");
+            postElement.classList.add("forum-post");
+
+            const isLiked = likedPosts[post.id] === true;
+
+            postElement.innerHTML = `
+                <h3>${post.title}</h3>
+                <p>${post.content}</p>
+                <p><strong>Posted by:</strong> ${post.username}</p>
+                ${post.image ? `<img src="${post.image}" class="forum-image" width="200" height="200">` : ''}
+                <button onclick="likePost('${post.id}')" ${isLiked ? "disabled" : ""}>${post.likes} Likes</button>
+            `;
+            postsContainer.appendChild(postElement);
+        });
+    }
+
+    function likePost(postId) {
+        const posts = JSON.parse(localStorage.getItem("posts")) || [];
+        let likedPosts = JSON.parse(localStorage.getItem("likedPosts")) || {}; 
+
+        if (!likedPosts[postId]) { 
+            const postIndex = posts.findIndex(post => post.id == postId);
+            if (postIndex !== -1) {
+                posts[postIndex].likes += 1;
+                localStorage.setItem("posts", JSON.stringify(posts));
+                likedPosts[postId] = true;
+                localStorage.setItem("likedPosts", JSON.stringify(likedPosts)); 
+                loadPosts();
+            }
+        }
+    }
+</script>
+
+
+
+<style>
+    #forum-container {
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .forum-input {
+        margin-bottom: 15px;
+    }
+    .forum-post {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+    .forum-image {
+        max-width: 200px;
+        max-height: 200px;
+        display: block;
+        margin-top: 10px;
+    }
+</style>
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

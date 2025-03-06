@@ -1,0 +1,154 @@
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title>Mood Tracker</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<style>
+		 body {
+            text-align: center;
+        }
+        .month {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(7, 40px);
+            gap: 5px;
+            justify-content: center;
+        }
+        .day {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .mood-key {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .mood-key div {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            border: 1px solid #000;
+            cursor: pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="page-wrapper">
+
+			<!-- Header -->
+				<div id="header-wrapper">
+					<div class="container">
+						<div class="row">
+							<div class="col-12">
+
+								<header id="header">
+									<h1><a href="index.html" id="logo">Gentle Tears</a></h1>
+									<nav id="nav">
+										<a href="index.html">Homepage</a>
+										<a href="Resources.html">Resources</a>
+										<a href="CommunityForum.html">Community Forum</a>
+										<a href="MoodTracker.html" class="current-page-item">Mood Tracker</a>
+										<a href="Activities.html">Activities</a>
+									</nav>
+								</header>
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+			<!-- Main -->
+	<div id="main">
+		<div class="container">
+			<h1>2025 Mood Tracker</h1>
+			<div class="mood-key">
+				<div style="background: #ff9999;" onclick="setMoodColor('#ff9999')"></div> Happy
+				<div style="background: #99ccff;" onclick="setMoodColor('#99ccff')"></div> Sad
+				<div style="background: #ffcc99;" onclick="setMoodColor('#ffcc99')"></div> Neutral
+				<div style="background: #cc99ff;" onclick="setMoodColor('#cc99ff')"></div> Stressed
+			</div>
+			<div id="calendar"></div>
+		
+			<script>
+				let selectedColor = "";
+		
+				function setMoodColor(color) {
+					selectedColor = color;
+				}
+		
+				function saveMood(dayId, color) {
+					localStorage.setItem(dayId, color);
+				}
+		
+				function loadMood(dayId, element) {
+					const savedColor = localStorage.getItem(dayId);
+					if (savedColor) {
+						element.style.backgroundColor = savedColor;
+					}
+				}
+		
+				function generateCalendar() {
+					const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+					const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+					const calendar = document.getElementById("calendar");
+					
+					for (let i = 0; i < 12; i++) {
+						let monthDiv = document.createElement("div");
+						monthDiv.classList.add("month");
+						let title = document.createElement("h2");
+						title.textContent = months[i];
+						monthDiv.appendChild(title);
+						
+						let grid = document.createElement("div");
+						grid.classList.add("grid");
+						
+						for (let j = 1; j <= daysInMonth[i]; j++) {
+							let day = document.createElement("div");
+							day.classList.add("day");
+							day.textContent = j;
+							let dayId = `${months[i]}-${j}`;
+							
+							day.onclick = function () {
+								if (selectedColor) {
+									day.style.backgroundColor = selectedColor;
+									saveMood(dayId, selectedColor);
+								}
+							};
+							
+							loadMood(dayId, day);
+							grid.appendChild(day);
+						}
+						monthDiv.appendChild(grid);
+						calendar.appendChild(monthDiv);
+					}
+				}
+				generateCalendar();
+			</script>
+
+			<!-- Footer -->
+				
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
