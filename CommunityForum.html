@@ -2,7 +2,7 @@
 
 <html>
 	<head>
-		<title>Community Forum</title>
+		<title>Journal</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
@@ -21,7 +21,7 @@
 									<nav id="nav">
 										<a href="index.html">Homepage</a>
 										<a href="Resources.html">Resources</a>
-										<a href="CommunityForum.html" class="current-page-item">Community Forum</a>
+										<a href="CommunityForum.html" class="current-page-item">Journal</a>
 										<a href="MoodTracker.html">Mood Tracker</a>
 										<a href="Activities.html">Activities</a>
 									</nav>
@@ -39,22 +39,15 @@
 							<div class="col-4 col-12-medium">
 
 								<section>
-									<h2>Rules and Guide</h2>
-									<ol>
-										<ol>
-										<li>1. Be Respectful when posting in the coummunity forum</li>
-										<p></p>
-										<li>2. You can post your response to the daily journal prompt, vent, or how's your day been.</li>
-										<p></p>
-										<li>3. Posts are monitored on a daily basis, misconducted will be dealt it with</li>
-									</ol>
+                                    <h2>Today's Journal Prompt</h2>
+                                    <div id="journal-prompt" class="p-6 max-w-lg mx-auto bg-white rounded-xl shadow-md space-y-4 text-center"></div>
 								</section>
 
 							</div>
 							
 <div class="col-8 col-12-medium imp-medium">
     <section>
-        <h2>Community Forum</h2>
+        <h2>Journal</h2>
         <div id="forum-container">
             <div class="forum-input">
                 <input type="text" id="post-title" placeholder="Post Title">
@@ -68,6 +61,77 @@
     </section>
 </div>
 
+<script>
+    const prompts = [
+    "What are three things you are grateful for today?",
+"Describe a time you felt truly at peace. What contributed to that feeling?",
+"What is one small thing you can do today to improve your mood?",
+"Write about a challenge you overcame and what you learned from it.",
+"What are your biggest sources of stress right now? How can you manage them?",
+"Describe a person who has positively influenced your life and why.",
+"What self-care activities make you feel the best? How can you do them more often?",
+"What are three things you love about yourself?",
+"How do you handle negative emotions? What are healthy ways to cope?",
+"If you could give advice to your past self, what would it be?",
+"Describe your ideal day. What can you do to make it a reality?",
+"What is a fear you would like to overcome? How can you start working on it?",
+"What accomplishments are you proud of?",
+"What is something you're looking forward to?",
+"How have you grown as a person in the last year?",
+"What are three things that make you happy?",
+"What boundaries do you need to set for your mental health?",
+"How do you show yourself kindness?",
+"What negative thoughts do you need to challenge?",
+"Describe a moment when you felt deeply connected to someone.",
+"What is something you want to forgive yourself for?",
+"What inspires you to keep going on tough days?",
+"How can you cultivate more mindfulness in your daily life?",
+"Write about a time when you felt proud of yourself.",
+"What is something you've always wanted to try? What’s stopping you?",
+"What does self-love mean to you? How can you practice it more?",
+"What do you need to let go of to find peace?",
+"How do you recharge when you're feeling emotionally drained?",
+"What kind of person do you want to become?",
+"Write a letter to your future self.",
+"What song, book, or movie has had a big impact on you and why?",
+"What is your favorite way to relax?",
+"What advice would you give to a friend struggling with mental health?",
+"How do you practice gratitude in your life?",
+"What is something that brings you a sense of purpose?",
+"What does happiness look like for you?",
+"Write about a time you helped someone. How did it make you feel?",
+"What habits do you want to build to support your mental health?",
+"How do you handle self-doubt?",
+"What is something that always makes you smile?",
+"Describe a place where you feel safe and calm.",
+"What small moments in life bring you joy?",
+"What is something you’ve learned from a past mistake?",
+"How do you handle change? What helps you adapt?",
+"Write about a time you felt truly confident in yourself.",
+"How do you express your emotions in a healthy way?",
+"What does success mean to you?",
+"What do you need to hear today? Write it down as if you were comforting a friend."
+    ];
+    
+    function getDailyPrompt() {
+        const storedPromptIndex = localStorage.getItem("promptIndex");
+        const lastUpdated = localStorage.getItem("lastUpdated");
+        const today = new Date().setHours(0, 0, 0, 0);
+    
+        if (storedPromptIndex && lastUpdated && parseInt(lastUpdated) === today) {
+            return prompts[parseInt(storedPromptIndex)];
+        } else {
+            const newIndex = Math.floor(Math.random() * prompts.length);
+            localStorage.setItem("promptIndex", newIndex);
+            localStorage.setItem("lastUpdated", today);
+            return prompts[newIndex];
+        }
+    }
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("journal-prompt").innerText = getDailyPrompt();
+    });
+</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -207,6 +271,174 @@
         }
     }
 </script>
+
+<!-- <script src="https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js"></script>
+
+<script>
+    // ✅ Replace with your Firebase Config
+    const firebaseConfig = {
+        apiKey: "AIzaSyBI60QVkBTelYOUup5hpmvDzfK4dtY4zww",
+    authDomain: "gentletears-d8eb0.firebaseapp.com",
+    projectId: "gentletears-d8eb0",
+    storageBucket: "gentletears-d8eb0.firebasestorage.app",
+    messagingSenderId: "319495846140",
+    appId: "1:319495846140:web:d1b4b0fc775f26eca83f79"
+    };
+
+    // ✅ Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // ✅ Check Firestore Connection
+    db.collection("test").get().then(() => {
+        console.log("✅ Firestore connected successfully!");
+    }).catch((error) => {
+        console.error("❌ Firestore connection failed:", error);
+    });
+
+    // ✅ Assign Unique Username
+    const usernames = [
+"HappyTiger", "BraveElephant", "GentlePanda", "CuriousDolphin", "KindRabbit", "JollyPenguin", "FriendlyOtter",  
+"CheerfulFox", "MerryKoala", "PlayfulSquirrel", "LivelyLynx", "SmilingTurtle", "CleverBeaver", "CharmingDeer",  
+"WittyHedgehog", "BouncyKangaroo", "ZestyParrot", "SunnyGiraffe", "DandySeahorse", "SillyMeerkat",  
+"PeppyRaccoon", "SpiritedBadger", "JazzyCheetah", "PerkyChipmunk", "BreezySwan", "SnappyCrab", "MirthfulFerret",  
+"GigglyOcelot", "PeppyPlatypus", "SassyJackal", "UpbeatSloth", "DaringFalcon", "FeistyMongoose", "ZanyArmadillo",  
+"FriskyWeasel", "PerseveringWolf", "TenaciousBison", "CunningCoyote", "VividMacaw", "FrolicsomeFawn", "MellowManatee",  
+"BriskMustang", "VibrantLemur", "DapperPeacock", "PluckyPorcupine", "BlissfulGoat", "JubilantDonkey", "LushOwl",  
+"BubblyMarmoset", "LustrousJaguar", "BouncyWallaby", "ResilientBaldEagle", "DaintyGoldfish", "ZippySalamander",  
+"EffervescentFlamingo", "SuaveStingray", "BrilliantFirefly", "EbullientDolphin", "JollyHummingbird", "PerkyPangolin",  
+"RadiantChameleon", "GleefulWombat", "DashingMole", "HeartyLobster", "HumbleDuck", "ChirpyBluejay", "PeppyWoodpecker",  
+"SwankyVulture", "RambunctiousFerret", "GallantGazelle", "CheekyHyena", "MerryMongoose", "ZestfulEel", "ExuberantFrog",  
+"SaucyScorpion", "PrancingMustang", "EnthusiasticMink", "VivaciousBobcat", "GraciousCygnet", "SprightlyHare",  
+"BlazingPhoenix", "SoaringAlbatross", "MirthfulQuokka", "HaleHawk", "AgileServal", "WinsomeRaven", "GregariousGibbon",  
+"EndearingSeal", "SportyOryx", "LivelyTamarin", "JazzyShrimp", "FerventLark", "DeterminedCaribou", "EnigmaticSphinx",  
+"NimbleChinchilla", "KeenTarsier", "BuoyantStarling", "JollyMagpie", "CheerfulTurkey", "SturdyMoose", "WarmheartedGorilla",  
+"GiddyOkapi", "PeppyButterfly", "JovialArmadillo", "FancifulIbex", "JauntyWren", "HarmoniousTarsier", "FlamboyantCobra",  
+"ChummyPorcupine", "DynamicHedgehog", "GleamingEgret", "EnlightenedCrane", "FancifulNarwhal", "SunkissedGecko",  
+"SpritelyBison", "VenerableTapir", "LustrousOrangutan", "GiddyQuail", "SuaveStork", "MajesticCondor", "PerseveringWalrus",  
+"DaringViper", "AnimatedPuffin", "RoguishCaracal", "BoisterousBeetle", "EnlivenedPika", "GlowingStarfish",  
+"FlourishingIbex", "DynamicOpossum", "SplendidEchidna", "DaintySwallow", "ChirpyRobin", "MerryPelican", "WaggishWeasel",  
+"ThrivingCormorant", "SociableTanager", "EnergeticGerbil", "EnchantingNightjar", "JauntyLoon", "DandyHornbill",  
+"GallantWolverine", "CharmingAnole", "HaleTurtle", "SprightlyCivet", "JubilantOriole", "DapperPuma", "PerkyHawk",  
+"ChirpingFlicker", "WaggishBinturong", "RavishingMacaw", "SpiritedKite", "LivelyThrasher", "GlowingPeccary",  
+"FestiveQuetzal", "KeenFlounder", "EbullientGrasshopper", "DapperOsprey", "GallivantingHoopoe", "JauntyMandrill",  
+"SportyIbex", "VivaciousBonobo", "FrolickingGazelle", "DashingKingfisher", "ResilientMuskrat", "PluckyAnemone",  
+"BashfulTamarin", "MajesticHartebeest", "DaringCuttlefish", "EffervescentCicada", "RousingSunbird", "AdventurousYabby",  
+"ThrivingNumbat", "SpunkyJerboa", "BuoyantAardvark", "ChipperChickadee", "BriskVole", "GlisteningTenrec",  
+"MagneticDrongo", "CharismaticCuscus", "GleefulKookaburra", "ExuberantPlover", "SwankyJacana", "FancifulRhebok",  
+"ThrivingXerus", "SportyBushbaby", "MirthfulCoati", "LivelyDotterel", "WittyKea", "BouncyPotoroo",  
+"ExultantQuokka", "GiddyZorilla", "DandyPangolin", "JubilantVervet", "FrolicsomeRedshank", "ZestyOcelot",  
+"RambunctiousManakin", "BlazingPewee", "DazzlingCassowary", "ElatedHornshark", "ThrivingSaki",  
+"SprightlySifaka", "GregariousBobolink", "LuminousTrogon", "EnchantingAnhinga", "DaringBooby",  
+"ResplendentSunbittern", "VibrantPotoo", "ChirpingSnipe", "JubilantBulbul", "DapperTarsier",  
+"LustrousOropendola", "RadiantKiskadee", "DazzlingDrongo", "EbullientBufflehead", "ChirpyFody",  
+"EffervescentTinamou", "JovialPetrel", "SpiritedJaeger", "GallantSkua", "FrolickingDotterel",  
+"AdventurousFody", "ZippyRail", "MerryTinamou", "ResilientSandpiper", "SpritelyJacana", "SociableWattledStarling"  
+    ];
+    
+    async function assignUsername() {
+        let deviceId = localStorage.getItem("deviceId");
+        if (!deviceId) {
+            deviceId = "device_" + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem("deviceId", deviceId);
+        }
+
+        const userRef = db.collection("users").doc(deviceId);
+        const doc = await userRef.get();
+
+        if (doc.exists) {
+            localStorage.setItem("username", doc.data().username);
+        } else {
+            const newUsername = usernames[Math.floor(Math.random() * usernames.length)];
+            await userRef.set({ username: newUsername });
+            localStorage.setItem("username", newUsername);
+        }
+    }
+
+    async function submitPost() {
+        const title = document.getElementById("post-title").value.trim();
+        const content = document.getElementById("post-content").value.trim();
+        const imageInput = document.getElementById("post-image");
+        const username = localStorage.getItem("username") || "AnonymousUser";
+
+        if (!title || !content) return;
+
+        const reader = new FileReader();
+        reader.onload = async function(event) {
+            await db.collection("posts").add({
+                title,
+                content,
+                image: imageInput.files.length ? event.target.result : "",
+                likes: 0,
+                username,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            loadPosts();
+        };
+
+        if (imageInput.files.length) {
+            reader.readAsDataURL(imageInput.files[0]);
+        } else {
+            reader.onload();
+        }
+    }
+
+    async function loadPosts() {
+        const postsContainer = document.getElementById("posts");
+        postsContainer.innerHTML = "";
+
+        const querySnapshot = await db.collection("posts").orderBy("timestamp", "desc").get();
+        querySnapshot.forEach((doc) => {
+            const post = doc.data();
+            const postId = doc.id;
+            const currentUsername = localStorage.getItem("username") || "AnonymousUser";
+            const isOwner = post.username === currentUsername;
+            const isLiked = localStorage.getItem(`liked_${postId}`) === "true";
+
+            const postElement = document.createElement("div");
+            postElement.classList.add("forum-post");
+            postElement.innerHTML = `
+                <h3>${post.title}</h3>
+                <p>${post.content}</p>
+                <p><strong>Posted by:</strong> ${post.username}</p>
+                ${post.image ? `<img src="${post.image}" class="forum-image">` : ''}
+                <button onclick="likePost('${postId}')" ${isLiked ? "disabled" : ""}>${post.likes} Likes</button>
+                ${isOwner ? `<button onclick="deletePost('${postId}')">Delete</button>` : ""}
+            `;
+
+            postsContainer.appendChild(postElement);
+        });
+    }
+
+    async function likePost(postId) {
+        const postRef = db.collection("posts").doc(postId);
+
+        const doc = await postRef.get();
+        if (doc.exists && !localStorage.getItem(`liked_${postId}`)) {
+            const currentLikes = doc.data().likes || 0;
+            await postRef.update({ likes: currentLikes + 1 });
+            localStorage.setItem(`liked_${postId}`, "true");
+            loadPosts();
+        }
+    }
+
+    async function deletePost(postId) {
+        const postRef = db.collection("posts").doc(postId);
+        const doc = await postRef.get();
+        if (doc.exists && doc.data().username === localStorage.getItem("username")) {
+            await postRef.delete();
+            loadPosts();
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", async function() {
+        await assignUsername();
+        loadPosts();
+    }); -->
+
+</script>
+
 
 
 

@@ -21,7 +21,7 @@
 									<nav id="nav">
 										<a href="index.html">Homepage</a>
 										<a href="Resources.html">Resources</a>
-										<a href="CommunityForum.html">Community Forum</a>
+										<a href="CommunityForum.html">Journal</a>
 										<a href="MoodTracker.html">Mood Tracker</a>
 										<a href="Activities.html" class="current-page-item">Activities</a>
 									</nav>
@@ -31,6 +31,26 @@
 						</div>
 					</div>
 				</div>
+<style>     .stress-ball {
+  background: pink;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  transition: all 0.1s;
+  display: flex;
+  color: white;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  line-height: 1;
+  
+}
+.stress-ball:active {
+  transform: scale(0.8);
+  background: hotpink;
+}
+</style>
+
 
 			<!-- Main -->
 				<div id="main">
@@ -38,14 +58,17 @@
 						<div class="row main-row">
 							<div class="col-3 col-12-medium">
 									<section>
-										<h2>Today's Journal Prompt</h2>
-										<div id="journal-prompt" class="p-6 max-w-lg mx-auto bg-white rounded-xl shadow-md space-y-4 text-center"></div>
+                    <div class="fidget">
+                      <h2>Stress Ball</h2>
+                      <div class="stress-ball">(◣_◢)</div>
+                    </div>
 									</section>
 
 									<section class="calm-zone">
 										<h2>Take a Deep Breath</h2>
 										<div class="breathing-circle"></div>
 								</section>
+                            
 
 							</div>
 							<div class="col-6 col-12-medium imp-medium">
@@ -55,6 +78,8 @@
 										<h2>Bubble Pop</h2>
 										<div id="bubbleContainer"></div>
 									</div>
+                  <div id="app" class="grid gap-6 p-6">
+                  </div>
 								</section>
 
 							</div>
@@ -88,80 +113,13 @@
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
-			<script>
-				const prompts = [
-				"What are three things you are grateful for today?",
-  "Describe a time you felt truly at peace. What contributed to that feeling?",
-  "What is one small thing you can do today to improve your mood?",
-  "Write about a challenge you overcame and what you learned from it.",
-  "What are your biggest sources of stress right now? How can you manage them?",
-  "Describe a person who has positively influenced your life and why.",
-  "What self-care activities make you feel the best? How can you do them more often?",
-  "What are three things you love about yourself?",
-  "How do you handle negative emotions? What are healthy ways to cope?",
-  "If you could give advice to your past self, what would it be?",
-  "Describe your ideal day. What can you do to make it a reality?",
-  "What is a fear you would like to overcome? How can you start working on it?",
-  "What accomplishments are you proud of?",
-  "What is something you're looking forward to?",
-  "How have you grown as a person in the last year?",
-  "What are three things that make you happy?",
-  "What boundaries do you need to set for your mental health?",
-  "How do you show yourself kindness?",
-  "What negative thoughts do you need to challenge?",
-  "Describe a moment when you felt deeply connected to someone.",
-  "What is something you want to forgive yourself for?",
-  "What inspires you to keep going on tough days?",
-  "How can you cultivate more mindfulness in your daily life?",
-  "Write about a time when you felt proud of yourself.",
-  "What is something you've always wanted to try? What’s stopping you?",
-  "What does self-love mean to you? How can you practice it more?",
-  "What do you need to let go of to find peace?",
-  "How do you recharge when you're feeling emotionally drained?",
-  "What kind of person do you want to become?",
-  "Write a letter to your future self.",
-  "What song, book, or movie has had a big impact on you and why?",
-  "What is your favorite way to relax?",
-  "What advice would you give to a friend struggling with mental health?",
-  "How do you practice gratitude in your life?",
-  "What is something that brings you a sense of purpose?",
-  "What does happiness look like for you?",
-  "Write about a time you helped someone. How did it make you feel?",
-  "What habits do you want to build to support your mental health?",
-  "How do you handle self-doubt?",
-  "What is something that always makes you smile?",
-  "Describe a place where you feel safe and calm.",
-  "What small moments in life bring you joy?",
-  "What is something you’ve learned from a past mistake?",
-  "How do you handle change? What helps you adapt?",
-  "Write about a time you felt truly confident in yourself.",
-  "How do you express your emotions in a healthy way?",
-  "What does success mean to you?",
-  "What do you need to hear today? Write it down as if you were comforting a friend."
-				];
-				
-				function getDailyPrompt() {
-					const storedPromptIndex = localStorage.getItem("promptIndex");
-					const lastUpdated = localStorage.getItem("lastUpdated");
-					const today = new Date().setHours(0, 0, 0, 0);
-				
-					if (storedPromptIndex && lastUpdated && parseInt(lastUpdated) === today) {
-						return prompts[parseInt(storedPromptIndex)];
-					} else {
-						const newIndex = Math.floor(Math.random() * prompts.length);
-						localStorage.setItem("promptIndex", newIndex);
-						localStorage.setItem("lastUpdated", today);
-						return prompts[newIndex];
-					}
-				}
-				
-				document.addEventListener("DOMContentLoaded", function() {
-					document.getElementById("journal-prompt").innerText = getDailyPrompt();
-				});
-			</script>
+			
 			
 			<style>
+
+        
 				        .breathing-circle {
+                
             width: 100px;
             height: 100px;
             background: #b3e5fc;
@@ -193,58 +151,75 @@
         }
 			</style>
    <script>
+
 	// Bubble Pop Simulator
 	function createBubbles() {
-		let container = document.getElementById('bubbleContainer');
-		container.innerHTML = '';
-		let bubbles = 20;
-		for (let i = 0; i < bubbles; i++) {
-			let bubble = document.createElement('div');
-			bubble.classList.add('bubble');
-			bubble.onclick = function() {
-				let popSound = new Audio('bubble-pop-2-293341.mp3');
-				popSound.play();
-				bubble.style.animation = 'pop 0.2s forwards';
-				setTimeout(() => {
-					bubble.remove();
-					bubbles--;
-					if (bubbles === 0) {
-						setTimeout(createBubbles, 500);
-					}
-				}, 200);
-			};
-			container.appendChild(bubble);
-		}
-	}
-	createBubbles();
-	
+            let container = document.getElementById('bubbleContainer');
+            container.innerHTML = '';
+            let bubbles = 36;
+            let remainingBubbles = bubbles;
+            for (let i = 0; i < bubbles; i++) {
+                let bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                bubble.onclick = function() {
+                    let popSound = new Audio('bubble-pop-2-293341.mp3');
+                    popSound.play();
+                    bubble.style.animation = 'pop 0.2s forwards';
+                    setTimeout(() => {
+                        bubble.remove();
+                        remainingBubbles--;
+                        if (remainingBubbles === 0) {
+                            setTimeout(createBubbles, 500);
+                        }
+                    }, 200);
+                };
+                container.appendChild(bubble);
+            }
+        }
+        createBubbles();
+
 	// Virtual Coloring Book
-	let canvas = document.getElementById("canvas");
-	let ctx = canvas.getContext("2d");
-	let painting = false;
+        let canvas = document.getElementById("canvas");
+        let ctx = canvas.getContext("2d");
+        let painting = false;
 
-	canvas.addEventListener("mousedown", (event) => {
-		painting = true;
-		ctx.beginPath();
-		ctx.moveTo(event.offsetX, event.offsetY);
-	});
-	canvas.addEventListener("mouseup", () => painting = false);
-	canvas.addEventListener("mousemove", draw);
+        function startPosition(event) {
+            painting = true;
+            ctx.beginPath();
+            let pos = getPosition(event);
+            ctx.moveTo(pos.x, pos.y);
+        }
+        function endPosition() {
+            painting = false;
+        }
+        function draw(event) {
+            if (!painting) return;
+            ctx.lineWidth = 5;
+            ctx.lineCap = "round";
+            ctx.strokeStyle = "black";
+            let pos = getPosition(event);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+        }
+        function getPosition(event) {
+            let rect = canvas.getBoundingClientRect();
+            return {
+                x: (event.clientX || event.touches[0].clientX) - rect.left,
+                y: (event.clientY || event.touches[0].clientY) - rect.top
+            };
+        }
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
 
-	function draw(event) {
-		if (!painting) return;
-		ctx.lineWidth = 5;
-		ctx.lineCap = "round";
-		ctx.strokeStyle = "black";
-		ctx.lineTo(event.offsetX, event.offsetY);
-		ctx.stroke();
-		ctx.beginPath();
-		ctx.moveTo(event.offsetX, event.offsetY);
-	}
-	
-	function clearCanvas() {
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-	}
+        canvas.addEventListener("mousedown", startPosition);
+        canvas.addEventListener("mouseup", endPosition);
+        canvas.addEventListener("mousemove", draw);
+        canvas.addEventListener("touchstart", startPosition);
+        canvas.addEventListener("touchend", endPosition);
+        canvas.addEventListener("touchmove", draw);
 
 	// White Noise Generator
 	let whiteNoise = new Audio("03-White-Noise-60min.mp3");
@@ -258,5 +233,45 @@
 		}
 	}
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const hydrationInput = document.getElementById("hydration");
+      const nutritionInput = document.getElementById("nutrition");
+      const saveDataBtn = document.getElementById("saveData");
+      const savedDataDisplay = document.getElementById("savedDataDisplay");
+      const meditationLog = document.getElementById("meditationLog");
+      const clearLogBtn = document.getElementById("clearLog");
+      const sleepChecklistContainer = document.getElementById("sleepChecklist");
+
+      const sleepChecklistItems = [
+        "Consistent Bedtime", "No Screens", "Dark Room", "Relaxation Routine"
+      ];
+      
+      sleepChecklistItems.forEach(item => {
+        const label = document.createElement("label");
+        label.classList.add("flex", "items-center", "gap-2");
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(item));
+        sleepChecklistContainer.appendChild(label);
+      });
+
+      saveDataBtn.addEventListener("click", () => {
+        const hydration = hydrationInput.value;
+        const nutrition = nutritionInput.value;
+        localStorage.setItem("hydration", hydration);
+        localStorage.setItem("nutrition", nutrition);
+        savedDataDisplay.textContent = `Last saved: ${hydration} cups of water, ${nutrition}`;
+        alert("Hydration & Nutrition data saved!");
+      });
+
+      clearLogBtn.addEventListener("click", () => {
+        meditationLog.value = "";
+      });
+    });
+  </script>
+  
 	</body>
 </html>

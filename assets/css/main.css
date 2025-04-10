@@ -98,7 +98,7 @@ input, select, textarea {
 	}
 
 	h2 {
-		text-transform: lowercase;
+		/* text-transform: lowercase; */
 		font-size: 1.6em;
 		letter-spacing: -1px;
 		margin-bottom: 1em;
@@ -1553,7 +1553,7 @@ input, select, textarea {
 			right: 40px;
 			top: 1px;
 			line-height: 84px;
-			text-transform: lowercase;
+			/* text-transform: lowercase; */
 			font-size: 1.3em;
 			letter-spacing: -1px;
 		}
